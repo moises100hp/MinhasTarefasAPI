@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace MinhasTarefasAPI.Repositories.Contracts
 {
-    public interface IUsuarioRepository
+    public interface ITarefaRepository
     {
-        void Cadastrar(AplicationUser usuario, string senha);
-        AplicationUser Obter(string email, string senha);
+        List<Tarefa> Sincronizacao(List<Tarefa> tarefas);
+        List<Tarefa> Restauracao(AplicationUser usuario, DateTime dataUltimaSincronizacao);
+
 
     }
 }
