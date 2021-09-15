@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MinhasTarefasAPI.Database;
+using MinhasTarefasAPI.Models;
 using MinhasTarefasAPI.Repositories;
 using MinhasTarefasAPI.Repositories.Contracts;
 using System;
@@ -33,10 +34,12 @@ namespace MinhasTarefasAPI
             {
                 op.UseSqlite("Data Source=Database\\MinhasTarefas.db");
             });
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            
             /*Repository*/
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<ITarefaRepository, TarefaRepository>();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddDefaultIdentity<AplicationUser>().AddEntityFrameworkStores<MinhasTarefasContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +55,8 @@ namespace MinhasTarefasAPI
                 app.UseHsts();
             }
 
+            app.UseStatusCodePages();
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
         }
