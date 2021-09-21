@@ -20,12 +20,14 @@ namespace MinhasTarefasAPI.Controllers
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly ITokenRepository _tokenRepository;
         private readonly SignInManager<AplicationUser> _signInManager;
         private readonly UserManager<AplicationUser> _userManager;
 
-        public UsuarioController(IUsuarioRepository usuarioRepository, SignInManager<AplicationUser> signInManager, UserManager<AplicationUser> userManager)
+        public UsuarioController(IUsuarioRepository usuarioRepository, ITokenRepository tokenRepository, SignInManager<AplicationUser> signInManager, UserManager<AplicationUser> userManager)
         {
             _usuarioRepository = usuarioRepository;
+            _tokenRepository = tokenRepository;
             _signInManager = signInManager;
             _userManager = userManager;
         }
@@ -45,10 +47,25 @@ namespace MinhasTarefasAPI.Controllers
                     //Login no Identity
                     //Será adaptado para JWT
 
-                    _signInManager.SignInAsync(usuario, false);
+                    // _signInManager.SignInAsync(usuario, false);
 
                     //retorna Token (JWT)
-                    return Ok(BuildToken(usuario));
+                    var token = BuildToken(usuario);
+
+                    //Salvar token no banco
+                    var tokenModel = new Token()
+                    {
+                        ExpirationToken = token.Expiration,
+                        RefreshToken = token.RefreshToken,
+                        ExpirationRefreshToken = token.ExpirationRefreshToken,
+                        Usuario = usuario,
+                        Criado = DateTime.Now,
+                        utilizado = false
+                    };
+
+                    _tokenRepository.Cadastrar(tokenModel);
+
+                    return Ok(token);
                 }
                 else
                     return NotFound("Usuário não localizado");
@@ -87,7 +104,7 @@ namespace MinhasTarefasAPI.Controllers
                 return UnprocessableEntity(ModelState);
         }
 
-        public object BuildToken(AplicationUser usuario)
+        public TokenDTO BuildToken(AplicationUser usuario)
         {
             var claims = new[]
             {
@@ -109,7 +126,13 @@ namespace MinhasTarefasAPI.Controllers
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-            return new { token = tokenString, expiration = exp };
+            var refreshToken = Guid.NewGuid().ToString();
+            var exprefreshToken = DateTime.UtcNow.AddHours(2);
+
+            var tokenDTO = new TokenDTO { Token = tokenString, Expiration = exp, RefreshToken = refreshToken, ExpirationRefreshToken = exprefreshToken };
+
+
+            return tokenDTO;
         }
     }
 }
