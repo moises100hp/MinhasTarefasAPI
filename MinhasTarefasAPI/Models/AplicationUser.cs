@@ -9,7 +9,7 @@ namespace MinhasTarefasAPI.Models
 {
     public class AplicationUser : IdentityUser
     {
-        public string FullName { get; set; }
+        public string FullNamed { get; set; }
         [ForeignKey("UsuarioId")]
         public ICollection<Tarefa> Tarefas { get; set; }
     }

@@ -33,7 +33,9 @@ namespace MinhasTarefasAPI.Repositories
             //Cadastro novos registros (Tarefas)
 
             var tarefasNovas = tarefas.Where(a => a.IdTarefaApi == 0);
+            var tarefasExcluidasAtualizadas = tarefas.Where(a => a.IdTarefaApi != 0).ToList();
 
+            //Cadastrar novos registros
             if (tarefasNovas.Count() > 0)
             {
                 foreach (var tarefa in tarefasNovas)
@@ -42,8 +44,7 @@ namespace MinhasTarefasAPI.Repositories
                 }
             }
 
-            var tarefasExcluidasAtualizadas = tarefas.Where(a => a.IdTarefaApi != 0);
-            
+            //Atualizacao de registros (Excluido)
             if(tarefasExcluidasAtualizadas.Count() > 0)
             {
                 foreach (var tarefa in tarefasExcluidasAtualizadas)
