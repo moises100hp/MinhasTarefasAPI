@@ -12,5 +12,7 @@ namespace MinhasTarefasAPI.Models
         public string FullNamed { get; set; }
         [ForeignKey("UsuarioId")]
         public ICollection<Tarefa> Tarefas { get; set; }
+        [ForeignKey("UsuarioId")]
+        public ICollection<Token> Tokens { get; set; }
     }
 }

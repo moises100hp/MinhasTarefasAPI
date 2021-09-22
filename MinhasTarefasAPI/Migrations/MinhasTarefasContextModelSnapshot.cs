@@ -224,13 +224,13 @@ namespace MinhasTarefasAPI.Migrations
 
                     b.Property<string>("RefreshToken");
 
-                    b.Property<string>("usuarioId");
+                    b.Property<string>("UsuarioId");
 
                     b.Property<bool>("utilizado");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("usuarioId");
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Token");
                 });
@@ -289,9 +289,9 @@ namespace MinhasTarefasAPI.Migrations
 
             modelBuilder.Entity("MinhasTarefasAPI.Models.Token", b =>
                 {
-                    b.HasOne("MinhasTarefasAPI.Models.AplicationUser", "usuario")
-                        .WithMany()
-                        .HasForeignKey("usuarioId");
+                    b.HasOne("MinhasTarefasAPI.Models.AplicationUser", "Usuario")
+                        .WithMany("Tokens")
+                        .HasForeignKey("UsuarioId");
                 });
 #pragma warning restore 612, 618
         }

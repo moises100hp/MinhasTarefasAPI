@@ -8,10 +8,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210910010508_BancoInicial.cs" />
+    <Compile Remove="Migrations\20210910010508_BancoInicial.Designer.cs" />
+    <Compile Remove="Migrations\20210910011831_TarefaSincronizacao.cs" />
+    <Compile Remove="Migrations\20210910011831_TarefaSincronizacao.Designer.cs" />
+    <Compile Remove="Migrations\20210921222922_Token.cs" />
+    <Compile Remove="Migrations\20210921222922_Token.Designer.cs" />
+    <Compile Remove="Migrations\20210922013409_AddFKToken.cs" />
+    <Compile Remove="Migrations\20210922013409_AddFKToken.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

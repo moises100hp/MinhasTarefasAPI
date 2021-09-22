@@ -19,7 +19,7 @@ namespace MinhasTarefasAPI.Repositories
 
         public Token Obter(string refreshToken)
         {
-            return _banco.Token.FirstOrDefault(a => a.RefreshToken == refreshToken);
+            return _banco.Token.FirstOrDefault(a => a.RefreshToken == refreshToken && a.utilizado == false);
         }
 
         public void Cadastrar(Token token)

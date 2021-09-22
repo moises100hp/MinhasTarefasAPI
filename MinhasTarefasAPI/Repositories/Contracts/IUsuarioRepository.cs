@@ -10,6 +10,7 @@ namespace MinhasTarefasAPI.Repositories.Contracts
     {
         void Cadastrar(AplicationUser usuario, string senha);
         AplicationUser Obter(string email, string senha);
+        AplicationUser Obter(string id);
 
     }
 }

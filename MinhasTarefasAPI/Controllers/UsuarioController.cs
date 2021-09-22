@@ -50,28 +50,36 @@ namespace MinhasTarefasAPI.Controllers
                     // _signInManager.SignInAsync(usuario, false);
 
                     //retorna Token (JWT)
-                    var token = BuildToken(usuario);
-
-                    //Salvar token no banco
-                    var tokenModel = new Token()
-                    {
-                        ExpirationToken = token.Expiration,
-                        RefreshToken = token.RefreshToken,
-                        ExpirationRefreshToken = token.ExpirationRefreshToken,
-                        Usuario = usuario,
-                        Criado = DateTime.Now,
-                        utilizado = false
-                    };
-
-                    _tokenRepository.Cadastrar(tokenModel);
-
-                    return Ok(token);
+                    return GerarToken(usuario);
                 }
                 else
                     return NotFound("Usuário não localizado");
             }
             else
                 return UnprocessableEntity(ModelState);
+        }
+
+
+        [HttpPost("renovar")]
+        public ActionResult Renovar([FromBody]TokenDTO tokenDTO)
+        {
+            var refreshTokenDB = _tokenRepository.Obter(tokenDTO.RefreshToken);
+
+            if (refreshTokenDB == null)
+                return NotFound();
+
+            //Refresh token usado (antigo) e atualizar - desativar refreshtoken
+            refreshTokenDB.Atualizado = DateTime.Now;
+            refreshTokenDB.utilizado = true;
+            _tokenRepository.Atualizar(refreshTokenDB);
+
+
+            //Gerar novo token com refresh e salvar
+
+            var usuario = _usuarioRepository.Obter(refreshTokenDB.Usuario.Id);
+
+            //retorna Token (JWT)
+           return GerarToken(usuario);
         }
 
         [HttpPost("")]
@@ -133,6 +141,26 @@ namespace MinhasTarefasAPI.Controllers
 
 
             return tokenDTO;
+        }
+
+        private ActionResult GerarToken(AplicationUser usuario)
+        {
+            var token = BuildToken(usuario);
+
+            //Salvar token no banco
+            var tokenModel = new Token()
+            {
+                ExpirationToken = token.Expiration,
+                RefreshToken = token.RefreshToken,
+                ExpirationRefreshToken = token.ExpirationRefreshToken,
+                Usuario = usuario,
+                Criado = DateTime.Now,
+                utilizado = false
+            };
+
+            _tokenRepository.Cadastrar(tokenModel);
+
+            return Ok(token);
         }
     }
 }

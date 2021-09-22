@@ -48,6 +48,9 @@ namespace MinhasTarefasAPI.Repositories
             }
         }
 
-
+        public AplicationUser Obter(string id)
+        {
+            return _userManager.FindByEmailAsync(id).Result;
+        }
     }
 }
